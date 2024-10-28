@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style> body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; } </style>
+</head>
+<body>
+    <h1>URL Shortener</h1>
+    <form method="POST" action="/url">
+        <div class="input-bar" style="display: flex;">
+            <input type="text" name="url" placeholder="Enter Your URL">
+            <button type="submit">Generate</button>
+        </div>
+    </form>
+    <% if (locals.id) { %>
+        <p>URL Generated : http://localhost:8000/<%=id%></p>
+    <% } %>
+</body>
+</html>
