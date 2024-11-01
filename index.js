@@ -1,7 +1,13 @@
 const express = require('express');
-const URL = require('./models/url.model');
 const path = require('path');
+const cookieParser = require('cookie-parser');
+
+const URL = require('./models/url.model');
+
+
 const connectToMongoDB = require('./connection.js')
+
+const {restrictToLoggedInUsers, checkAuth} = require('./middlewares/auth')
 
 const URLrouter = require('./routes/url.router');
 const staticRouter = require('./routes/staticRouter');
@@ -17,17 +23,19 @@ connectToMongoDB('mongodb://localhost:27017/url-shortener').then(
 app.set("view engine", "ejs");
 app.set("views", path.resolve("./views"));
 
-app.use('/', staticRouter )f
+app.use(cookieParser());
+app.use('/', checkAuth, staticRouter )
 
-app.use("/url", URLrouter); 
+app.use("/url", restrictToLoggedInUsers , URLrouter); 
 app.use('/user', UserRouter);
+
 
 
 app.get("/:id", async (req,res) => {
     const id = req.params.id;
     const entry = await URL.findOne({shortId: id})
     if(!entry) return res.status(404).json({error: "URL not found"})
-    entry.visitHistory.push({timestamp: Date.now()})
+    entry.visitHistory.push({ timestamp: Date.now() })
     entry.save()
     res.redirect(entry.redirectURL)
 })
