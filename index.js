@@ -29,7 +29,10 @@ app.use('/', checkAuth, staticRouter )
 app.use("/url", restrictToLoggedInUsers , URLrouter); 
 app.use('/user', UserRouter);
 
-
+app.use((req, res, next) => {
+    res.clearCookie('uid');
+    next();
+});
 
 app.get("/:id", async (req,res) => {
     const id = req.params.id;

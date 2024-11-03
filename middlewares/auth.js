@@ -1,5 +1,6 @@
 const { log } = require('console');
 const {getUser} = require('../service/auth')
+
 async function restrictToLoggedInUsers(req, res, next){
    const userid = req.cookies?.uid;
    if(!userid) return res.redirect('/login')
@@ -10,13 +11,13 @@ async function restrictToLoggedInUsers(req, res, next){
 }
 
 async function checkAuth (req, res, next){
-    const userid = req.cookies?.uid;
+   const token = req.cookies?.uid;
+   
+   const user = getUser(token)
 
-    const user = getUser(userid)
+   req.user = user;
 
-    req.user = user;
-
-    next()
+   next()
 }
 
 module.exports = {
