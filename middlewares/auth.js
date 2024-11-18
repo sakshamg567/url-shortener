@@ -1,4 +1,3 @@
-const { log } = require('console');
 const {getUser} = require('../service/auth')
 
 async function restrictToLoggedInUsers(req, res, next){
